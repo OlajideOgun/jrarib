@@ -1,6 +1,13 @@
-import sys 
-a_file = open(sys.argv[1], "r")
+import sys
 list_of_lists = []
+
+# for line in sys.stdin:
+#   stripped_line = line.rstrip()
+#   line_list = stripped_line.split()
+#   line_list = list(map(int, line_list))
+#   list_of_lists.append(line_list)
+  
+a_file = open(sys.argv[1], "r")
 for line in a_file:
   stripped_line = line.strip()
   line_list = stripped_line.split()
@@ -8,41 +15,36 @@ for line in a_file:
   list_of_lists.append(line_list)
 a_file.close()
 
-length1  = list_of_lists[0][0]
-length2 = list_of_lists[1][0]
 
 
 
-def sort(list1,list2):
-  new_list = []
-  i = 0
-  j = 0
-  k = 0
-  if length1 == 0:
-    return([length2] + list2)
-  if length2 == 0:
-    return([length1] + list1)
+def merge(list1, list2):
+  if len(list1) == 0 :
+    return list2
+  if len(list2) == 0:
+    return list1
+  sortedlist = []
+  x = 0
+  y = 0
+  while len(sortedlist) < len(list1) + len(list2):
+      if list1[x] < list2[y]:
+          sortedlist.append(list1[x])
+          x = x + 1
+      else:
+          sortedlist.append(list2[y])
+          y = y + 1
+
+      if x == len(list1) or y == len(list2):
+          sortedlist.extend(list1[x:] or list2[y:])
+
+  return sortedlist
 
 
+result = list(map(str,merge(list_of_lists[0][1:],list_of_lists[1][1:])))
+result.insert(0,str(len(result)))
+result = ", ".join(result).replace(",","")
+print(result)
+# outF = open(sys.argv[2], "w")
+# outF.write(", ".join(result).replace(",","") + '\n')
+# outF.close()
 
-  while i < length1 and j < length2:
-    if list1[i] < list2[j]:
-      new_list.append(list1[i])
-      i = i + 1
-    elif list1[i] > list2[j]:
-      new_list.append(list2[j])
-      j = j + 1
-
-    if j == length2:
-      new_list = new_list + list1[i:]
-    if i == length2:
-      new_list = new_list + list2[j:]
-  
-  return ([length1 + length2]+ new_list)
-
-
-result = sort(list_of_lists[0][1:],list_of_lists[1][1:])
-outF = open(sys.argv[2], "w")
-outF.write(str(result))
-outF.close()
-  
